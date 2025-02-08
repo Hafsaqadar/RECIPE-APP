@@ -7,25 +7,48 @@ const GetTwoValuesFromArray =(arr) =>{
   return [arr[0], arr[1]]
 }
 
-const RecipeCard = ({recipe, bg, badge}) => {
+const RecipeCard = ({
+  recipe, 
+  bg, 
+  badge, 
+  isFavorite: propIsFavorite, 
+  onFavoriteClick,
+  isInFavoritesPage
+}) => {
   const healthLabels = GetTwoValuesFromArray (recipe.healthLabels);
-  const [isFavorite, setIsFavorite] = useState(localStorage.getItem('favorites')?.includes(recipe.label));
+  const [isFavorite, setIsFavorite] = useState(() => {
+    if (propIsFavorite !== undefined) return propIsFavorite;
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    return favorites.some(fav => fav.label === recipe.label);
+  });
 
   const addRecipeToFavorites = () => {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  const isRecipeAreadyInFavorites = favorites.some((fav) => fav.label === recipe.label);
-  if(isRecipeAreadyInFavorites ){
-    favorites - favorites.filter((fav) => fav.label !== recipe.label);
-    setIsFavorite(false);
-  } else{
-    favorites.push(recipe);
-    setIsFavorite(true)
-  }
-  localStorage.setItem('favorites', JSON.stringify(favorites));
+    const isRecipeAreadyInFavorites = favorites.some((fav) => fav.label === recipe.label);
+    
+    if(isRecipeAreadyInFavorites) {
+      favorites = favorites.filter((fav) => fav.label !== recipe.label);
+      setIsFavorite(false);
+    } else {
+      favorites.push(recipe);
+      setIsFavorite(true);
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    // Dispatch event to notify other components
+    window.dispatchEvent(new Event('favoritesUpdated'));
   }
   
+  const handleFavoriteClick = (e) => {
+    e.preventDefault();
+    if (isInFavoritesPage && onFavoriteClick) {
+      onFavoriteClick(recipe);
+      setIsFavorite(false);
+    } else {
+      addRecipeToFavorites();
+    }
+  };
 
- 
   return (
     <div 
     className={`flex flex-col rounded-md ${bg} overflow-hidden p-3 relative`}>
@@ -45,10 +68,7 @@ const RecipeCard = ({recipe, bg, badge}) => {
         </div>
 
         <div className='absolute top-1 right-2 bg-white rounded-full p-1 cursor-pointer'
-        onClick={(e) => {
-          e.preventDefault();
-          addRecipeToFavorites()
-        }}
+        onClick={handleFavoriteClick}
         >
          {!isFavorite &&  <Heart size={20} className='hover:fill-red-500 hover:text-red-500'/> }
          {isFavorite && <Heart size={20} className='fill-red-500 hover:text-red-500'/> }
