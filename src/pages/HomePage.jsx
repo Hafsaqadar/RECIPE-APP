@@ -42,29 +42,29 @@ const HomePage = () => {
 
   const handleSearchRecipe = (e) => {
    e.preventDefault();
-    fetchRecipes(e.target[0].value)
+    fetchRecipes(e.target[0].value);
   }
   return (
-    <div className='bg-[#faf9fb] p-10 flex-1 '>
-     <div className='max-w-screen-lg mx-auto'>
+    <div className='bg-[#faf9fb] p-10 md:p-8   flex-1 md:pl-32 '>
+     <div className='max-w-screen-lg mx-auto  md:px-2'>
      <form onSubmit={handleSearchRecipe}>
-      <label className='input shadow-md flex items-center gap-2'>
-      <Search  size={"24"} />
-      <input type='text' className='text-sm md:text-md grow' placeholder='what do you want to cook today?'/>
+      <label className='input shadow-md flex items-center gap-2  md:py-1 md:h-10 '>
+      <Search  size={"19"} />
+      <input type='text' className='text-sm md:text-sm grow ' placeholder='what do you want to cook today?'/>
       </label>
      </form>
-     <h1 className='font-bold text-3xl md:text-5xl mt-4'>
+     <h1 className='font-bold text-3xl md:text-xl mt-4'>
       Recomended Recipes
      </h1>
      <p className='text-slate-500 font-semibold ml-1 my-2 text-sm tracking-tight'>
       popular choices
      </p>
 
-     <div className='grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+     <div className='grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3   '>
 
       {!loading && recipe.map(({recipe},index)=>(
         <RecipeCard key={recipe.uri} recipe={recipe}
-        // {...getRandomColor()}
+       
         />
       ))}
 

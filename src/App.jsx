@@ -5,7 +5,8 @@ import FavoritesPage from "./pages/FavoritesPage";
 function App() {
   
   return (
-    <div className="flex">
+   
+    <div className="flex ">
      <Sidebar />
      <Routes>
       <Route path='/'element={<HomePage />}/> 
@@ -13,6 +14,7 @@ function App() {
      </Routes>
      
     </div>
+   
   )
 }
 
